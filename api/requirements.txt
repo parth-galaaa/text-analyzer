@@ -1,0 +1,4 @@
+flask
+flask_cors
+transformers  # For text summarization and paraphrasing
+nltk          # For additional NLP processing
