@@ -1,4 +1,4 @@
-## Text Analyzer
+## Text Analyzer App
 
 ## Introduction
 
