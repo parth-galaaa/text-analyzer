@@ -1,3 +1,4 @@
+"use client";
 import { Navbar, NavbarContent, NavbarItem, Link, Button } from "@heroui/react";
 
 const navbar = () => {
