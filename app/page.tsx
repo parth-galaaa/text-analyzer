@@ -1,8 +1,16 @@
 'use client';
 
-import { useState } from 'react';
+import Navbar from "@/components/Navbar";
 
-const Page = () => {
+export default function Home() {
+  return (
+    <main className="flex min-h-screen flex-col bg-gray-100 mx-auto">
+      <Navbar />
+    </main>
+  );
+}
+
+/*const Page = () => {
   const [inputText, setInputText] = useState('');
   const [summary, setSummary] = useState('');
 
@@ -59,4 +67,4 @@ const Page = () => {
   );
 };
 
-export default Page;
+export default Page;*/
