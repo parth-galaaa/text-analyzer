@@ -1,6 +1,6 @@
-import { Navbar, NavbarBrand, NavbarContent, NavbarItem, Link, Button } from "@heroui/react";
+import { Navbar, NavbarContent, NavbarItem, Link, Button } from "@heroui/react";
 
-export default function App() {
+const navbar = () => {
 	return (
 		<Navbar>
 			<NavbarContent className="hidden sm:flex gap-4" justify="center">
@@ -33,3 +33,5 @@ export default function App() {
 		</Navbar>
 	);
 }
+
+export default navbar;
