@@ -11,7 +11,7 @@ const tabs = () => {
 	return (
 		<div className="flex flex-col p-4">
 			<Tabs defaultValue="summarizer">
-				<TabsList className="grid w-full grid-cols-3 text-soft-blue">
+				<TabsList className="grid w-full grid-cols-3 text-soft-blue mb-2">
 					<TabsTrigger value="summarizer" className="text-xl hover:shadow-md hover:bg-light-blue hover:text-white transition-colors duration-300">
 						Summarizer
 					</TabsTrigger>
