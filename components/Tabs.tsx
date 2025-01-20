@@ -22,8 +22,6 @@ const tabs = () => {
 						Sentiment Analysis
 					</TabsTrigger>
 				</TabsList>
-
-				{/* Remove gap and padding to ensure no space below the tabs */}
 				<TabsContent value="summarizer" className="mt-0">
 					<div className="grid w-full grid-cols-[1fr_auto_1fr] gap-4 items-center">
 						<Textarea
@@ -44,7 +42,22 @@ const tabs = () => {
 				</TabsContent>
 
 				<TabsContent value="paraphraser" className="mt-0">
-					<p className="text-soft-blue">Paraphraser tool.</p>
+					<div className="grid w-full grid-cols-[1fr_auto_1fr] gap-4 items-center">
+						<Textarea
+							placeholder="To summarize, paraphrase or analyze sentiment, enter your text here."
+							id="textbox1"
+							className="bg-white w-full h-80 shadow-md border border-gray-200"
+						/>
+						<div className="w-px bg-gray-300 h-full"></div> {/* Vertical Line */}
+						<div className="flex flex-col">
+							<Textarea
+								placeholder="Your output will appear here."
+								id="textbox2"
+								className="bg-white w-full h-80 shadow-md border border-gray-200"
+								disabled
+							/>
+						</div>
+					</div>
 				</TabsContent>
 				<TabsContent value="sentiment" className="mt-0">
 					<p className="text-soft-blue">Sentiment analysis tool.</p>
