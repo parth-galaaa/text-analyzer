@@ -1,15 +1,14 @@
 import Navbar from "@/components/Navbar";
-import Tabs from "@/components/Tabs";
+import Tabs from "@/components/AnalyzerTools";
 
 export default function Home() {
   return (
-    <main className="flex min-h-screen flex-col bg-off-white mx-auto">
+    <main className="flex min-h-screen flex-col bg-gradient-to-r from-blue-50 via-gray-50 to-blue-100 mx-auto">
       <Navbar />
       <Tabs />
     </main>
   );
 }
-
 
 /*const Page = () => {
   const [inputText, setInputText] = useState('');
