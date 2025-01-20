@@ -1,38 +1,33 @@
 "use client";
-import { Navbar, NavbarContent, NavbarItem, Link, Button } from "@heroui/react";
+import * as React from "react"
+import Link from "next/link"
+import {
+	NavigationMenu,
+	NavigationMenuItem,
+	NavigationMenuList,
+} from "@/components/ui/navigation-menu"
 
-const navbar = () => {
+const Navbar = () => {
 	return (
-		<Navbar>
-			<NavbarContent className="hidden sm:flex gap-4" justify="center">
-				<NavbarItem>
-					<Link color="foreground" href="#">
-						Features
-					</Link>
-				</NavbarItem>
-				<NavbarItem isActive>
-					<Link aria-current="page" href="#">
-						Customers
-					</Link>
-				</NavbarItem>
-				<NavbarItem>
-					<Link color="foreground" href="#">
-						Integrations
-					</Link>
-				</NavbarItem>
-			</NavbarContent>
-			<NavbarContent justify="end">
-				<NavbarItem className="hidden lg:flex">
-					<Link href="#">Login</Link>
-				</NavbarItem>
-				<NavbarItem>
-					<Button as={Link} color="primary" href="#" variant="flat">
-						Sign Up
-					</Button>
-				</NavbarItem>
-			</NavbarContent>
-		</Navbar>
+		<div className="flex w-full comtainer flex-wrap items-center justify-between mx-auto px-2 py-2 bg-soft-blue shadow-lg">
+			<NavigationMenu className="ml-4">
+				<NavigationMenuList>
+					<NavigationMenuItem>
+						<Link href="#" className="text-md hover:font-bold text-off-white font-medium hover:shadow-md">Features</Link>
+					</NavigationMenuItem>
+					<NavigationMenuItem>
+						<Link href="#" className="text-md hover:font-bold text-off-white font-medium hover:shadow-md">Services</Link>
+					</NavigationMenuItem>
+					<NavigationMenuItem>
+						<Link href="#" className="text-md hover:font-bold text-off-white font-medium hover:shadow-md">Login</Link>
+					</NavigationMenuItem>
+					<NavigationMenuItem>
+						<Link href="#" className="text-md hover:font-bold text-off-white font-medium hover:shadow-md">Sign up</Link>
+					</NavigationMenuItem>
+				</NavigationMenuList>
+			</NavigationMenu>
+		</div>
 	);
-}
+};
 
-export default navbar;
+export default Navbar;

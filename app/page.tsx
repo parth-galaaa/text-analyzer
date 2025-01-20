@@ -1,12 +1,15 @@
 import Navbar from "@/components/Navbar";
+import Tabs from "@/components/Tabs";
 
 export default function Home() {
   return (
-    <main className="flex min-h-screen flex-col bg-gray-100 mx-auto">
+    <main className="flex min-h-screen flex-col bg-off-white mx-auto">
       <Navbar />
+      <Tabs />
     </main>
   );
 }
+
 
 /*const Page = () => {
   const [inputText, setInputText] = useState('');
