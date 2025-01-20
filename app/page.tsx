@@ -16,7 +16,7 @@ export default function Home() {
 
   const handleRequest = async () => {
     try {
-      const response = await fetch('http://127.0.0.1:5328/api/summarize', {
+      const response = await fetch('http://127.0.0.1:5328/api/textanalyze', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
