@@ -50,7 +50,7 @@ const NavigationMenuDemo: React.FC = () => {
 								<ul className="grid grid-cols-1 gap-3 p-4 w-[200px]">
 									<li>
 										{accountActions.map((component) => (
-											<ListItem className="hover:bg-[#e9f4fc]"
+											<ListItem className="hover:bg-[#e9f4fc] dark:hover:text-black"
 												key={component.title}
 												title={component.title}
 												href={component.href}
