@@ -12,6 +12,8 @@ import {
 import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 import DarkMode from "@/components/Darkmode";
 import { CardWithForm } from "@/components/Account";
+import { motion } from "framer-motion";
+import CloseIcon from '@mui/icons-material/Close';
 
 const accountActions = [
 	{
@@ -28,25 +30,47 @@ const accountActions = [
 	},
 ];
 
-const Modal = ({ isOpen, onClose, children }: { isOpen: boolean; onClose: () => void; children: React.ReactNode }) => {
+const Modal = ({
+	isOpen,
+	onClose,
+	children,
+}: {
+	isOpen: boolean;
+	onClose: () => void;
+	children: React.ReactNode;
+}) => {
+	const modalVariants = {
+		hidden: { opacity: 0, y: "-10%" },
+		visible: { opacity: 1, y: "0%" },
+		exit: { opacity: 0, y: "-10%" },
+	};
+
 	if (!isOpen) return null;
 
 	return (
 		<div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
-			<div className="relative bg-white dark:bg-gray-800 rounded-lg shadow-lg w-[400px] p-6">
+			<motion.div
+				className="relative bg-white dark:bg-gray-800 rounded-lg shadow-lg w-[400px] p-6"
+				variants={modalVariants}
+				initial="hidden"
+				animate="visible"
+				exit="exit"
+				transition={{ type: "spring", stiffness: 300, damping: 30 }}
+			>
 				<button
-					className="absolute top-2 right-2 text-gray-500 hover:text-gray-800 dark:hover:text-gray-300"
+					className="absolute top-2 right-1 text-gray-500 hover:text-gray-800 dark:hover:text-gray-300"
 					onClick={onClose}
 				>
-					&times;
+					<CloseIcon />
 				</button>
 				{children}
-			</div>
+			</motion.div>
 		</div>
 	);
 };
 
-const NavigationMenuDemo: React.FC = () => {
+
+const NavigationMenuDemo = () => {
 	const [isModalOpen, setModalOpen] = React.useState(false);
 	const [activeType, setActiveType] = React.useState<string | null>(null);
 
@@ -80,10 +104,10 @@ const NavigationMenuDemo: React.FC = () => {
 				<div className="flex-1"></div>
 
 				{/* Center - App Title */}
-				<div className="text-2xl font-bold flex-1 text-center">Text Analyzer</div>
+				<div className="text-3xl font-bold flex-1 text-center">Text Analyzer</div>
 
 				{/*Right Side - Account and Theme */}
-				<div className="flex items-center space-x-6 flex-1 justify-end">
+				<div className="flex items-center space-x-4 flex-1 justify-end">
 					<NavigationMenu>
 						<NavigationMenuList>
 							<NavigationMenuItem>
@@ -93,15 +117,13 @@ const NavigationMenuDemo: React.FC = () => {
 								</NavigationMenuTrigger>
 								<NavigationMenuContent className="absolute right-0 left-auto">
 									<ul className="grid grid-cols-1 gap-3 p-4 w-[200px]">
-										{accountActions.map((action) => (
-											<li key={action.title}>
-												<button
-													className="w-full rounded-lg hover:bg-[#e9f4fc] dark:hover:text-black"
-													onClick={() => openModal(action.type)}
-												>
-													{action.title}
-												</button>
-											</li>
+										{accountActions.map((component) => (
+											<ListItem
+												className="hover:bg-[#e9f4fc] dark:hover:text-black text-sm font-medium shadow-sm"
+												key={component.title}
+												title={component.title}
+												onClick={() => openModal(component.type)}
+											/>
 										))}
 									</ul>
 								</NavigationMenuContent>
@@ -119,5 +141,26 @@ const NavigationMenuDemo: React.FC = () => {
 		</>
 	);
 };
+
+const ListItem = React.forwardRef<
+	React.ElementRef<"button">,
+	React.ComponentPropsWithoutRef<"button"> & { title: string }
+>(({ className, title, ...props }, ref) => {
+	return (
+		<li>
+			<button
+				ref={ref}
+				className={cn(
+					"block w-full text-left select-none rounded-md p-3 text-sm font-medium leading-none transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground",
+					className
+				)}
+				{...props}
+			>
+				{title}
+			</button>
+		</li>
+	);
+});
+ListItem.displayName = "ListItem";
 
 export default NavigationMenuDemo;

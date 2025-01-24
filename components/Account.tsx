@@ -20,8 +20,8 @@ export function CardWithForm({ type }: { type: "login" | "signup" | "contact" })
           {type === "login"
             ? "Sign in with your credentials"
             : type === "signup"
-            ? "Create a new account"
-            : "Get in touch with us"}
+              ? "Create a new account"
+              : "Get in touch with us"}
         </CardDescription>
       </CardHeader>
       <CardContent>
