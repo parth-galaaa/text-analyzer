@@ -11,7 +11,12 @@ import {
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 
-export function CardWithForm({ type }: { type: "login" | "signup" | "contact" }) {
+interface CardWithFormProps {
+  type: "login" | "signup" | "contact";
+  onClose: () => void;
+}
+
+export function CardWithForm({ type, onClose }: CardWithFormProps) {
   return (
     <Card className="w-[350px]">
       <CardHeader>
@@ -73,7 +78,7 @@ export function CardWithForm({ type }: { type: "login" | "signup" | "contact" })
         )}
       </CardContent>
       <CardFooter className="flex justify-between">
-        <Button variant="outline">Cancel</Button>
+        <Button variant="outline" onClick={onClose}>Cancel</Button>
         <Button>{type === "login" ? "Login" : type === "signup" ? "Sign Up" : "Submit"}</Button>
       </CardFooter>
     </Card>
