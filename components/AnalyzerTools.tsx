@@ -10,7 +10,11 @@ const TabsComponent = () => {
 	const [paraphraserOutput, setParaphraserOutput] = useState("");
 	const [sentimentInput, setSentimentInput] = useState("");
 	const [sentimentOutput, setSentimentOutput] = useState("");
-	const [enabledTab, setEnabledTab] = useState<"summarizer" | "paraphraser" | "sentiment" | null>(null);
+	const [translateInput, setTranslateInput] = useState("");
+	const [translateOutput, setTranslateOutput] = useState("");
+	const [enabledTab, setEnabledTab] = useState<
+		"summarizer" | "paraphraser" | "sentiment" | "translate" | null
+	>(null);
 	const maxWords = 250;
 
 	const countWords = (text: string) => {
@@ -21,6 +25,7 @@ const TabsComponent = () => {
 	const summarizerWordCount = countWords(summarizerInput);
 	const paraphraserWordCount = countWords(paraphraserInput);
 	const sentimentWordCount = countWords(sentimentInput);
+	const translateWordCount = countWords(translateInput);
 
 	const handleSummarize = () => {
 		setSummarizerOutput(`Summarized Output: \n${summarizerInput}`);
@@ -37,11 +42,16 @@ const TabsComponent = () => {
 		setEnabledTab("sentiment");
 	};
 
+	const handleTranslate = () => {
+		setTranslateOutput(`Translated Output: \n${translateInput}`);
+		setEnabledTab("translate");
+	};
+
 	return (
 		<div className="flex flex-col p-20 bg-white dark:bg-gray-900 dark:text-gray-200">
 			<Tabs defaultValue="summarizer">
-				<TabsList className="grid w-full grid-cols-3 text-soft-blue dark:text-gray-400">
-					{["summarizer", "paraphraser", "sentiment"].map((tab) => (
+				<TabsList className="grid w-full grid-cols-4 text-soft-blue dark:text-gray-400">
+					{["summarizer", "paraphraser", "sentiment", "translate"].map((tab) => (
 						<TabsTrigger
 							key={tab}
 							value={tab}
@@ -53,7 +63,7 @@ const TabsComponent = () => {
 					))}
 				</TabsList>
 
-				{["summarizer", "paraphraser", "sentiment"].map((tab) => (
+				{["summarizer", "paraphraser", "sentiment", "translate"].map((tab) => (
 					<TabsContent key={tab} value={tab}>
 						<div className="grid grid-cols-[1fr_1px_1fr] gap-4 items-stretch">
 							{/* Input Textarea and Word Count */}
@@ -64,20 +74,26 @@ const TabsComponent = () => {
 											? summarizerInput
 											: tab === "paraphraser"
 												? paraphraserInput
-												: sentimentInput
+												: tab === "sentiment"
+													? sentimentInput
+													: translateInput
 									}
 									onChange={(e) =>
 										tab === "summarizer"
 											? setSummarizerInput(e.target.value)
 											: tab === "paraphraser"
 												? setParaphraserInput(e.target.value)
-												: setSentimentInput(e.target.value)
+												: tab === "sentiment"
+													? setSentimentInput(e.target.value)
+													: setTranslateInput(e.target.value)
 									}
 									placeholder={`Enter text to ${tab === "summarizer"
 										? "summarize"
 										: tab === "paraphraser"
 											? "paraphrase"
-											: "analyze sentiment"
+											: tab === "sentiment"
+												? "analyze sentiment"
+												: "translate"
 										}.`}
 									className="w-full p-4 bg-transparent border-none focus:ring-0 dark:placeholder-gray-400 dark:text-gray-200"
 									style={{ fontSize: "15px", height: "60vh", overflowY: "auto" }}
@@ -87,7 +103,8 @@ const TabsComponent = () => {
 									<p
 										className={`font-semibold ${(tab === "summarizer" && summarizerWordCount > maxWords) ||
 											(tab === "paraphraser" && paraphraserWordCount > maxWords) ||
-											(tab === "sentiment" && sentimentWordCount > maxWords)
+											(tab === "sentiment" && sentimentWordCount > maxWords) ||
+											(tab === "translate" && translateWordCount > maxWords)
 											? "text-red-500"
 											: "text-black dark:text-gray-200"
 											}`}
@@ -96,7 +113,9 @@ const TabsComponent = () => {
 											? summarizerWordCount
 											: tab === "paraphraser"
 												? paraphraserWordCount
-												: sentimentWordCount}
+												: tab === "sentiment"
+													? sentimentWordCount
+													: translateWordCount}
 										/{maxWords} Words
 									</p>
 									<button
@@ -106,14 +125,18 @@ const TabsComponent = () => {
 												? handleSummarize
 												: tab === "paraphraser"
 													? handleParaphrase
-													: handleSentimentAnalysis
+													: tab === "sentiment"
+														? handleSentimentAnalysis
+														: handleTranslate
 										}
 									>
 										{tab === "summarizer"
 											? "Summarize"
 											: tab === "paraphraser"
 												? "Paraphrase"
-												: "Analyze Sentiment"}
+												: tab === "sentiment"
+													? "Analyze Sentiment"
+													: "Translate"}
 									</button>
 								</div>
 							</div>
@@ -129,7 +152,9 @@ const TabsComponent = () => {
 											? summarizerOutput
 											: tab === "paraphraser"
 												? paraphraserOutput
-												: sentimentOutput
+												: tab === "sentiment"
+													? sentimentOutput
+													: translateOutput
 									}
 									placeholder={`${tab.charAt(0).toUpperCase() + tab.slice(1)} text will appear here.`}
 									className="w-full p-4 bg-transparent border-none focus:ring-0 dark:placeholder-gray-400 dark:text-gray-200"
@@ -138,7 +163,6 @@ const TabsComponent = () => {
 								/>
 							</div>
 						</div>
-
 					</TabsContent>
 				))}
 			</Tabs>
