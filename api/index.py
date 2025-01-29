@@ -33,6 +33,8 @@ def process_text():
             result = "Pending summary implementation"
         elif action == "paraphrase":
             result = "Pending paraphrase implementation"
+        elif action == "sentiment":
+            result = "Pending sentiment analysis implementation"
         elif action == "translate":
             source_lang = data.get('source_lang')
             target_lang = data.get('target_lang')
