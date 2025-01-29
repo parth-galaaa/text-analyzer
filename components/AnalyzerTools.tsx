@@ -30,7 +30,12 @@ const TabsComponent = () => {
 			const response = await fetch("http://127.0.0.1:5328/api/textanalyze", {
 				method: "POST",
 				headers: { "Content-Type": "application/json" },
-				body: JSON.stringify({ text: inputs[tab], source_lang: "en", target_lang: "fr" }),
+				body: JSON.stringify({
+					text: inputs[tab],
+					action: tab, // Send the tab name as the action type
+					source_lang: "en", // Only needed for translation
+					target_lang: "fr"
+				}),
 			});
 			if (!response.ok) throw new Error("Failed to fetch the response");
 			const data = await response.json();

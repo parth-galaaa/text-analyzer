@@ -23,12 +23,26 @@ def translate_text(text, source_lang, target_lang):
 def process_text():
     data = request.get_json()
     text = data.get('text')
+    action = data.get('action')  # Determine the requested action
 
-    source_lang = data.get('source_lang')
-    target_lang = data.get('target_lang')
-    translated_text = translate_text(text, source_lang, target_lang)
-    return jsonify({"output": translated_text})
+    if not text:
+        return jsonify({"error": "No text provided"}), 400
 
+    try:
+        if action == "summarize":
+            result = "Pending summary implementation"
+        elif action == "paraphrase":
+            result = "Pending paraphrase implementation"
+        elif action == "translate":
+            source_lang = data.get('source_lang')
+            target_lang = data.get('target_lang')
+            result = translate_text(text, source_lang, target_lang)
+        else:
+            return jsonify({"error": "Invalid action"}), 400
+
+        return jsonify({"output": result})
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
 
 if __name__ == '__main__':
     app.run(debug=True, port=5328)
