@@ -9,8 +9,8 @@ def summarize():
     if request.method == 'POST':
         data = request.get_json()
         text = data.get('text')
-        summary = text[:100]  # Summarizing text by taking the first 100 characters
-        return jsonify({"summary": summary})
+        summary = text[:10]
+        return jsonify({"output" : summary})
     elif request.method == 'GET':
         # You can return a message or documentation for GET requests
         return jsonify({"message": "Use POST to send text for summarization."})

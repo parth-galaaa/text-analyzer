@@ -52,7 +52,7 @@ const Modal = ({
     return (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
             <motion.div
-                className="relative bg-white dark:bg-gray-800 rounded-lg shadow-lg w-[400px] p-6"
+                className="relative bg-white dark:bg-gray-800 rounded-lg shadow-lg w-[400px] p-6 "
                 variants={modalVariants}
                 initial="hidden"
                 animate="visible"
