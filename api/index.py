@@ -5,14 +5,21 @@ from transformers import AutoTokenizer, AutoModelForSeq2SeqLM
 app = Flask(__name__)
 CORS(app)
 
-def translate_text(text, source_lang, target_lang):
-    try:
-        model_name = f'Helsinki-NLP/opus-mt-{source_lang}-{target_lang}'
+tokenizer = None
+model = None
+
+def load_model(source_lang, target_lang):
+    global tokenizer, model
+    model_name = f"Helsinki-NLP/opus-mt-{source_lang}-{target_lang}"
+    if tokenizer is None or model is None:
         tokenizer = AutoTokenizer.from_pretrained(model_name)
         model = AutoModelForSeq2SeqLM.from_pretrained(model_name, return_dict=True)
 
-        inputs = tokenizer.encode(text, return_tensors='pt', max_length=512, truncation=True)
-        translated_ids = model.generate(inputs, max_length=512, num_beams=4, length_penalty=2.0, early_stopping=True)
+def translate_text(text, source_lang, target_lang):
+    try:
+        load_model(source_lang, target_lang)  # Load model once based on language pair
+        inputs = tokenizer.encode(text, return_tensors='pt', max_length=256, truncation=True)
+        translated_ids = model.generate(inputs, max_length=256, num_beams=4, length_penalty=2.0, early_stopping=True)
         translated_text = tokenizer.decode(translated_ids[0], skip_special_tokens=True)
 
         return translated_text

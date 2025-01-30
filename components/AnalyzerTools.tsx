@@ -3,7 +3,7 @@ import { useState } from "react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Textarea } from "@/components/ui/textarea";
 import { motion } from "framer-motion";
-import { Loader2, Clipboard, ArrowLeftRight } from "lucide-react";
+import { Loader2, Clipboard } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
 const TabsComponent = () => {
@@ -20,7 +20,7 @@ const TabsComponent = () => {
 		translate: "",
 	});
 	const [enabledTab, setEnabledTab] = useState<"summarize" | "paraphrase" | "sentiment" | "translate" | null>(null);
-	const maxWords = 250;
+	const maxWords = 150;
 
 	const countWords = (text: string) => text.trim().split(/\s+/).filter(Boolean).length;
 
