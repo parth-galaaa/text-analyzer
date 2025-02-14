@@ -94,7 +94,9 @@ const NavigationMenuDemo = () => {
         <>
             <nav className="flex items-center justify-between bg-blue-500 text-white shadow-md p-3 dark:bg-gray-800 dark:text-gray-100">
                 {/* Left Side - Logo or App Name */}
-                <div className="flex-1"></div>
+                <div className="flex items-center flex-1">
+                    <img src="/logo.png" alt="Logo" className="h-12 w-auto object-contain" />
+                </div>
 
                 {/* Center - App Title */}
                 <div className="text-3xl font-bold flex-1 text-center">Text Analyzer</div>
