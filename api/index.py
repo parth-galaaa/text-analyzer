@@ -1,28 +1,43 @@
 from flask import Flask, request, jsonify
 from flask_cors import CORS
 from transformers import AutoTokenizer, AutoModelForSeq2SeqLM
+import torch
+import time
 
 app = Flask(__name__)
 CORS(app)
 
-tokenizer = None
-model = None
+tokenizer_translation = None
+model_translation = None
 
-def load_model(source_lang, target_lang):
-    global tokenizer, model
+def load_translation_model(source_lang, target_lang):
+    global tokenizer_translation, model_translation
     model_name = f"Helsinki-NLP/opus-mt-{source_lang}-{target_lang}"
-    if tokenizer is None or model is None:
-        tokenizer = AutoTokenizer.from_pretrained(model_name)
-        model = AutoModelForSeq2SeqLM.from_pretrained(model_name, return_dict=True)
+    if tokenizer_translation is None or model_translation is None:
+        tokenizer_translation = AutoTokenizer.from_pretrained(model_name)
+        model_translation = AutoModelForSeq2SeqLM.from_pretrained(model_name, return_dict=True)
 
 def translate_text(text, source_lang, target_lang):
     try:
-        load_model(source_lang, target_lang)  # Load model once based on language pair
-        inputs = tokenizer.encode(text, return_tensors='pt', max_length=256, truncation=True)
-        translated_ids = model.generate(inputs, max_length=256, num_beams=4, length_penalty=2.0, early_stopping=True)
-        translated_text = tokenizer.decode(translated_ids[0], skip_special_tokens=True)
-
+        load_translation_model(source_lang, target_lang)
+        inputs = tokenizer_translation.encode(text, return_tensors='pt', max_length=256, truncation=True)
+        translated_ids = model_translation.generate(inputs, max_length=256, num_beams=4, length_penalty=2.0, early_stopping=True)
+        translated_text = tokenizer_translation.decode(translated_ids[0], skip_special_tokens=True)
         return translated_text
+    except Exception as e:
+        return str(e)
+
+# Summarization Model
+summary_tokenizer = AutoTokenizer.from_pretrained('t5-base')
+summary_model = AutoModelForSeq2SeqLM.from_pretrained('t5-base', return_dict=True)
+
+def summarize_text(text):
+    try:
+        inputs = summary_tokenizer.encode("summarize: " + text, return_tensors='pt', max_length=512, truncation=True)
+        summary_ids = summary_model.generate(inputs, max_length=512, min_length=80, length_penalty=5.0, num_beams=8)
+        summary = summary_tokenizer.decode(summary_ids[0], skip_special_tokens=True)
+        summary = summary.capitalize().replace(" .", ".")
+        return summary
     except Exception as e:
         return str(e)
 
@@ -30,14 +45,14 @@ def translate_text(text, source_lang, target_lang):
 def process_text():
     data = request.get_json()
     text = data.get('text')
-    action = data.get('action')  # Determine the requested action
+    action = data.get('action')
 
     if not text:
         return jsonify({"error": "No text provided"}), 400
 
     try:
         if action == "summarize":
-            result = "Pending summary implementation"
+            result = summarize_text(text)
         elif action == "paraphrase":
             result = "Pending paraphrase implementation"
         elif action == "sentiment":
