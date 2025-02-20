@@ -71,7 +71,7 @@ const Modal = ({
     );
 };
 
-const NavigationMenuDemo = () => {
+const Navbar = () => {
     const [isModalOpen, setModalOpen] = React.useState(false);
     const [activeType, setActiveType] = React.useState<AccountActionType | null>(null);
 
@@ -94,12 +94,19 @@ const NavigationMenuDemo = () => {
         <>
             <nav className="flex items-center justify-between bg-blue-500 text-white shadow-md p-3 dark:bg-gray-800 dark:text-gray-100">
                 {/* Left Side - Logo or App Name */}
-                <div className="flex items-center flex-1">
-                    <img src="/logo.png" alt="Logo" className="h-12 w-auto object-contain" />
+                <div className="flex flex-col items-center columns-1">
+                    <div>
+                        <img src="/images/logo.svg" alt="Logo" className="h-14 w-auto object-contain" />
+                    </div>
+                    <motion.p
+                        className="text-xs text-white dark:text-gray-200"
+                        initial={{ opacity: 0, x: -20 }}
+                        animate={{ opacity: 1, x: 0 }}
+                        transition={{ duration: 0.3, delay: 0.2 }}
+                    >
+                        AI-Powered Text Analysis
+                    </motion.p>
                 </div>
-
-                {/* Center - App Title */}
-                <div className="text-3xl font-bold flex-1 text-center">Text Analyzer</div>
 
                 {/* Right Side - Account and Theme */}
                 <div className="flex items-center space-x-4 flex-1 justify-end">
@@ -158,4 +165,4 @@ const ListItem = React.forwardRef<
 });
 ListItem.displayName = "ListItem";
 
-export default NavigationMenuDemo;
+export default Navbar;
