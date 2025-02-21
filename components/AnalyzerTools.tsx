@@ -47,9 +47,9 @@ const TabsComponent = () => {
 	};
 
 	return (
-		<div className="flex flex-col p-10 bg-white dark:bg-gray-900 dark:text-gray-200">
+		<div className="flex flex-col p-10 dark:bg-gray-900 dark:text-gray-200">
 			<Tabs defaultValue="summarize">
-				<TabsList className="grid w-full grid-cols-4 text-soft-blue dark:text-gray-400">
+				<TabsList className="grid w-full grid-cols-4 text-white dark:text-gray-400">
 					{["summarize", "paraphrase", "sentiment", "translate"].map((tab) => (
 						<TabsTrigger
 							key={tab}

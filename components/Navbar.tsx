@@ -92,14 +92,14 @@ const Navbar = () => {
 
     return (
         <>
-            <nav className="flex items-center justify-between bg-blue-500 text-white shadow-md p-3 dark:bg-gray-800 dark:text-gray-100">
+            <nav className="flex items-center justify-between text-white shadow-md p-3 dark:bg-gray-900 dark:text-gray-100">
                 {/* Left Side - Logo or App Name */}
                 <div className="flex flex-col items-center columns-1">
                     <div>
                         <img src="/images/logo.svg" alt="Logo" className="h-14 w-auto object-contain" />
                     </div>
                     <motion.p
-                        className="text-xs text-white dark:text-gray-200"
+                        className="text-sm font-medium text-white dark:text-gray-200"
                         initial={{ opacity: 0, x: -20 }}
                         animate={{ opacity: 1, x: 0 }}
                         transition={{ duration: 0.3, delay: 0.2 }}
