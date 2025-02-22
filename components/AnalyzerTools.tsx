@@ -75,14 +75,14 @@ const TabsComponent = () => {
 									onChange={(e) => setInputs((prev) => ({ ...prev, [tab]: e.target.value }))}
 									placeholder={`Enter text to ${tab}...`}
 									className="w-full p-4 bg-white border-none focus:ring-0 dark:placeholder-gray-400 dark:text-gray-200"
-									style={{ fontSize: "16px", height: "60vh", overflowY: "auto" }}
+									style={{ fontSize: "20px", height: "60vh", overflowY: "auto" }}
 								/>
 								<div className="relative w-full p-3 bg-white rounded-lg flex justify-between items-center dark:bg-gray-800">
 									<p className={`font-medium ${countWords(inputs[tab]) > maxWords ? "text-red-500" : "text-black dark:text-gray-200"}`}>
 										{countWords(inputs[tab])}/{maxWords} Words
 									</p>
 									<button
-										className={`bg-blue-500 text-white py-2 px-4 rounded-lg shadow-md transition duration-300 dark:bg-blue-600 ${countWords(inputs[tab]) > maxWords ? "opacity-50 cursor-not-allowed" : "hover:bg-blue-600"}`}
+										className={`bg-[#10538A] text-white py-2 px-4 rounded-lg shadow-md transition duration-300 dark:bg-blue-600 ${countWords(inputs[tab]) > maxWords ? "opacity-50 cursor-not-allowed" : "hover:bg-blue-600"}`}
 										onClick={() => handleAction(tab)}
 										disabled={countWords(inputs[tab]) > maxWords}
 									>
@@ -101,7 +101,7 @@ const TabsComponent = () => {
 									placeholder="Output:"
 									className="w-full p-4 bg-white border-none focus:ring-0 dark:placeholder-gray-400 dark:text-gray-200"
 									disabled={enabledTab !== tab}
-									style={{ fontSize: "16px", height: "60vh", overflow: "auto" }}
+									style={{ fontSize: "20px", height: "60vh", overflow: "auto" }}
 								/>
 								<div className="relative w-full p-3 bg-white rounded-lg flex justify-between items-center dark:bg-gray-800">
 									<Button
