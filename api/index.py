@@ -1,8 +1,6 @@
 from flask import Flask, request, jsonify
 from flask_cors import CORS
 from transformers import AutoTokenizer, AutoModelForSeq2SeqLM
-import torch
-import time
 
 app = Flask(__name__)
 CORS(app)
@@ -13,17 +11,36 @@ model_translation = None
 def load_translation_model(source_lang, target_lang):
     global tokenizer_translation, model_translation
     model_name = f"Helsinki-NLP/opus-mt-{source_lang}-{target_lang}"
-    if tokenizer_translation is None or model_translation is None:
-        tokenizer_translation = AutoTokenizer.from_pretrained(model_name)
-        model_translation = AutoModelForSeq2SeqLM.from_pretrained(model_name, return_dict=True)
+    
+    # Always reload instead of caching
+    tokenizer_translation = AutoTokenizer.from_pretrained(model_name)
+    model_translation = AutoModelForSeq2SeqLM.from_pretrained(model_name, return_dict=True)
+
+import nltk
+from nltk.tokenize import sent_tokenize
+
+nltk.download('punkt')  # Ensure sentence tokenizer is available
 
 def translate_text(text, source_lang, target_lang):
     try:
         load_translation_model(source_lang, target_lang)
-        inputs = tokenizer_translation.encode(text, return_tensors='pt', max_length=256, truncation=True)
-        translated_ids = model_translation.generate(inputs, max_length=256, num_beams=4, length_penalty=2.0, early_stopping=True)
-        translated_text = tokenizer_translation.decode(translated_ids[0], skip_special_tokens=True)
-        return translated_text
+        # Split text into sentences
+        sentences = sent_tokenize(text)
+
+        translated_sentences = []
+        for sentence in sentences:
+            inputs = tokenizer_translation.encode(sentence, return_tensors='pt', max_length=512, truncation=True)
+            translated_ids = model_translation.generate(
+                inputs, 
+                max_length=512,  # Increase to avoid truncation
+                num_beams=5, 
+                length_penalty=1.2, 
+                early_stopping=False
+            )
+            translated_text = tokenizer_translation.decode(translated_ids[0], skip_special_tokens=True)
+            translated_sentences.append(translated_text)
+
+        return " ".join(translated_sentences)
     except Exception as e:
         return str(e)
 
@@ -33,8 +50,8 @@ summary_model = AutoModelForSeq2SeqLM.from_pretrained('t5-base', return_dict=Tru
 
 def summarize_text(text):
     try:
-        inputs = summary_tokenizer.encode("summarize: " + text, return_tensors='pt', max_length=512, truncation=True)
-        summary_ids = summary_model.generate(inputs, max_length=512, min_length=80, length_penalty=5.0, num_beams=8)
+        inputs = summary_tokenizer.encode("summarize: " + text, return_tensors='pt', max_length=1024, truncation=True)
+        summary_ids = summary_model.generate(inputs, max_length=1024, min_length=80, length_penalty=5.0, num_beams=8)
         summary = summary_tokenizer.decode(summary_ids[0], skip_special_tokens=True)
         summary = summary.capitalize().replace(" .", ".")
         return summary
