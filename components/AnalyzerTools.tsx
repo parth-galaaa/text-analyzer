@@ -82,23 +82,27 @@ const TabsComponent = () => {
 								/>
 								<div className="relative w-full p-3 bg-white rounded-lg flex justify-between items-center dark:bg-gray-800">
 									{/* Left-aligned word count and first two buttons */}
-									<div className="flex items-center space-x-1">
+									<div className="flex items-center">
+										{/* Word Count - Slightly separated but natural */}
 										<p
-											className={`font-medium ${countWords(inputs[tab]) > maxWords
-												? "text-red-500"
-												: "text-black dark:text-gray-200"
+											className={`font-medium ${countWords(inputs[tab]) > maxWords ? "text-red-500" : "text-black dark:text-gray-200"
 												}`}
 										>
 											{countWords(inputs[tab])}/{maxWords} Words
 										</p>
+
+										{/* Divider That Actually Looks Good */}
+										<div className="mx-2 h-6 w-px bg-gray-600 opacity-50"></div>
+
+										{/* Buttons Stay Compact and Clean */}
 										<Button
 											variant="ghost"
 											size="icon"
-											className="hover:bg-gray-200"
+											className="hover:bg-gray-200 dark:hover:bg-gray-700"
 											onClick={async () => {
 												try {
-													const text = await navigator.clipboard.readText(); // Read from clipboard
-													setInputs((prev) => ({ ...prev, [tab]: text })); // Set text in active tab
+													const text = await navigator.clipboard.readText();
+													setInputs((prev) => ({ ...prev, [tab]: text }));
 												} catch (err) {
 													console.error("Clipboard read failed:", err);
 													alert("Failed to paste text. Please allow clipboard access.");
@@ -109,7 +113,7 @@ const TabsComponent = () => {
 										</Button>
 										<Button
 											variant="ghost"
-											className="flex items-center space-x-2 p-3 hover:bg-gray-200"
+											className="flex items-center space-x-2 px-3 py-2 hover:bg-gray-200 dark:hover:bg-gray-700"
 											onClick={() => {
 												const input = document.createElement("input");
 												input.type = "file";
@@ -131,6 +135,7 @@ const TabsComponent = () => {
 											<FileUploadOutlinedIcon className="w-4 h-4" />
 										</Button>
 									</div>
+
 									{/* Right-aligned action button */}
 									<button
 										className={`bg-[#10538A] text-white py-2 px-4 rounded-lg shadow-md transition duration-300 dark:bg-blue-600 ${countWords(inputs[tab]) > maxWords ? "opacity-50 cursor-not-allowed" : "hover:bg-blue-600"}`}
@@ -166,7 +171,7 @@ const TabsComponent = () => {
 									</Button>
 									<Button
 										variant="ghost"
-										className="flex items-center space-x-1 hover:bg-gray-200"
+										className="flex items-center space-x-1 p-3 hover:bg-gray-200"
 									>
 										<span className="text-md">Export</span>
 										<FileDownloadOutlinedIcon className="w-4 h-4" />
