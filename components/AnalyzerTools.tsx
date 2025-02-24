@@ -130,7 +130,7 @@ const TabsComponent = () => {
 									</div>
 									{/* Right-aligned action button */}
 									<button
-										className={`bg-blue-500 text-white py-2 px-4 rounded-lg shadow-md transition duration-300 dark:bg-blue-600 ${countWords(inputs[tab]) > maxWords ? "opacity-50 cursor-not-allowed" : "hover:bg-blue-600"}`}
+										className={`bg-[#10538A] text-white py-2 px-4 rounded-lg shadow-md transition duration-300 dark:bg-blue-600 ${countWords(inputs[tab]) > maxWords ? "opacity-50 cursor-not-allowed" : "hover:bg-blue-600"}`}
 										onClick={() => handleAction(tab)}
 										disabled={countWords(inputs[tab]) > maxWords}
 									>
