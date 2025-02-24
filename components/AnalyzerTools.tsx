@@ -171,12 +171,28 @@ const TabsComponent = () => {
 									</Button>
 									<Button
 										variant="ghost"
-										className="flex items-center space-x-1 p-3 hover:bg-gray-200"
-									>
-										<span className="text-md">Export</span>
-										<FileDownloadOutlinedIcon className="w-4 h-4" />
-									</Button>
+										size="icon"
+										onClick={() => {
+											const text = inputs[tab];
+											if (!text) {
+												alert("No text to download!");
+												return;
+											}
 
+											const blob = new Blob([text], { type: "text/plain" });
+											const url = URL.createObjectURL(blob);
+
+											const a = document.createElement("a");
+											a.href = url;
+											a.download = `${tab}.txt`;
+											document.body.appendChild(a);
+											a.click();
+											document.body.removeChild(a);
+											URL.revokeObjectURL(url);
+										}}
+									>
+										<FileDownloadOutlinedIcon />
+									</Button>
 								</div>
 							</motion.div>
 						</div>
