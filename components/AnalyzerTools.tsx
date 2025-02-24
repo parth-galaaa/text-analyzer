@@ -77,7 +77,7 @@ const TabsComponent = () => {
 									value={inputs[tab]}
 									onChange={(e) => setInputs((prev) => ({ ...prev, [tab]: e.target.value }))}
 									placeholder={`Enter text to ${tab}...`}
-									className="w-full p-4 bg-white border-none focus:ring-0 dark:placeholder-gray-400 dark:text-gray-200"
+									className="w-full p-4 bg-white border-none focus:ring-0 dark:placeholder-black dark:text-black"
 									style={{ fontSize: "18px", height: "60vh", overflowY: "auto" }}
 								/>
 								<div className="relative w-full p-3 bg-white rounded-lg flex justify-between items-center dark:bg-gray-800">
@@ -156,7 +156,7 @@ const TabsComponent = () => {
 								<Textarea
 									value={outputs[tab]}
 									placeholder="Output:"
-									className="w-full p-4 bg-white border-none focus:ring-0 dark:placeholder-gray-400 dark:text-gray-200"
+									className="w-full p-4 bg-white border-none focus:ring-0 dark:placeholder-black dark:text-black"
 									disabled={enabledTab !== tab}
 									style={{ fontSize: "18px", height: "60vh", overflow: "auto" }}
 								/>
