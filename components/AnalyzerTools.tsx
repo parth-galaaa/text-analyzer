@@ -5,8 +5,9 @@ import { Textarea } from "@/components/ui/textarea";
 import { motion } from "framer-motion";
 import ContentCopyIcon from '@mui/icons-material/ContentCopy';
 import ContentPasteIcon from '@mui/icons-material/ContentPaste';
-import FileUploadIcon from '@mui/icons-material/FileUpload';
+import FileUploadOutlinedIcon from '@mui/icons-material/FileUploadOutlined';
 import { Button } from "@/components/ui/button";
+import FileDownloadOutlinedIcon from '@mui/icons-material/FileDownloadOutlined';
 
 const TabsComponent = () => {
 	const [inputs, setInputs] = useState({
@@ -56,7 +57,7 @@ const TabsComponent = () => {
 						<TabsTrigger
 							key={tab}
 							value={tab}
-							className="text-xl font-semibold p-4 hover:shadow-md hover:bg-light-blue hover:text-gray-600 rounded-lg transition duration-300 dark:hover:bg-gray-700 dark:hover:text-gray-200"
+							className="text-xl font-semibold p-4 hover:shadow-md hover:bg-gray-200 hover:text-gray-600 rounded-lg transition duration-300 dark:hover:bg-gray-700 dark:hover:text-gray-200"
 							onClick={() => setEnabledTab(null)}
 						>
 							{tab.charAt(0).toUpperCase() + tab.slice(1)}
@@ -81,7 +82,7 @@ const TabsComponent = () => {
 								/>
 								<div className="relative w-full p-3 bg-white rounded-lg flex justify-between items-center dark:bg-gray-800">
 									{/* Left-aligned word count and first two buttons */}
-									<div className="flex items-center space-x-3">
+									<div className="flex items-center space-x-1">
 										<p
 											className={`font-medium ${countWords(inputs[tab]) > maxWords
 												? "text-red-500"
@@ -93,6 +94,7 @@ const TabsComponent = () => {
 										<Button
 											variant="ghost"
 											size="icon"
+											className="hover:bg-gray-200"
 											onClick={async () => {
 												try {
 													const text = await navigator.clipboard.readText(); // Read from clipboard
@@ -103,15 +105,15 @@ const TabsComponent = () => {
 												}
 											}}
 										>
-											<ContentPasteIcon />
+											<ContentPasteIcon className="w-4 h-4" />
 										</Button>
 										<Button
 											variant="ghost"
-											size="icon"
+											className="flex items-center space-x-2 p-3 hover:bg-gray-200"
 											onClick={() => {
 												const input = document.createElement("input");
 												input.type = "file";
-												input.accept = "text/plain"; // Accept only text files
+												input.accept = "text/plain,application/pdf";
 												input.onchange = async (event) => {
 													const file = (event.target as HTMLInputElement).files?.[0];
 													if (file) {
@@ -122,10 +124,11 @@ const TabsComponent = () => {
 														reader.readAsText(file);
 													}
 												};
-												input.click(); // Trigger file picker
+												input.click();
 											}}
 										>
-											<FileUploadIcon />
+											<span className="text-md">File Upload</span>
+											<FileUploadOutlinedIcon className="w-4 h-4" />
 										</Button>
 									</div>
 									{/* Right-aligned action button */}
@@ -156,10 +159,19 @@ const TabsComponent = () => {
 									<Button
 										variant="ghost"
 										size="icon"
+										className="hover:bg-gray-200"
 										onClick={() => navigator.clipboard.writeText(outputs[tab] || inputs[tab])}
 									>
-										<ContentCopyIcon />
+										<ContentCopyIcon className="w-4 h-4" />
 									</Button>
+									<Button
+										variant="ghost"
+										className="flex items-center space-x-1 hover:bg-gray-200"
+									>
+										<span className="text-md">Export</span>
+										<FileDownloadOutlinedIcon className="w-4 h-4" />
+									</Button>
+
 								</div>
 							</motion.div>
 						</div>
