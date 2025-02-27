@@ -191,6 +191,7 @@ const TabsComponent = () => {
 											URL.revokeObjectURL(url);
 										}}
 									>
+										<span className="text-md">Export</span>
 										<FileDownloadOutlinedIcon />
 									</Button>
 								</div>
