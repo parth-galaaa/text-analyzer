@@ -1,6 +1,7 @@
 from flask import Flask, request, jsonify
 from flask_cors import CORS
-from transformers import AutoTokenizer, AutoModelForSeq2SeqLM
+import torch
+from transformers import RobertaTokenizer, RobertaForSequenceClassification, AutoTokenizer, AutoModelForSeq2SeqLM
 import nltk
 from nltk.tokenize import sent_tokenize
 
@@ -11,8 +12,8 @@ nltk.download('punkt')
 
 # Load Paraphrasing Model
 device = "cpu"
-paraphrase_tokenizer = AutoTokenizer.from_pretrained("/Users/parth/Desktop/t5-base-chatgpt-150000")
-paraphrase_model = AutoModelForSeq2SeqLM.from_pretrained("/Users/parth/Desktop/t5-base-chatgpt-150000").to(device)
+paraphrase_tokenizer = AutoTokenizer.from_pretrained("C:/Users/ruchi/Downloads/t5-base-chatgpt-150000")
+paraphrase_model = AutoModelForSeq2SeqLM.from_pretrained("C:/Users/ruchi/Downloads/t5-base-chatgpt-150000").to(device)
 
 def paraphrase_sentence(sentence):
     num_beams = 5
@@ -104,6 +105,51 @@ def summarize_text(text):
         return cleaned_output
     except Exception as e:
         return str(e)
+    
+
+# Load Sentiment Analysis Model
+model_path = "C:/Users/ruchi/Downloads/emotion-roberta"  # Adjust path if necessary
+sentiment_tokenizer = RobertaTokenizer.from_pretrained(model_path)
+sentiment_model = RobertaForSequenceClassification.from_pretrained(model_path)
+
+LABEL_COLUMNS = ["anger", "disgust", "fear", "joy", "sadness", "surprise", "neutral"]
+
+def analyze_sentiment(text):
+    sentences = sent_tokenize(text)  # Tokenize input text into sentences
+    emotion_scores = {label: 0 for label in LABEL_COLUMNS}
+
+    for sentence in sentences:
+        inputs = sentiment_tokenizer(sentence, padding=True, truncation=True, max_length=64, return_tensors="pt")
+
+        sentiment_model.eval()
+        with torch.no_grad():
+            logits = sentiment_model(**inputs).logits
+
+        # Convert logits to probabilities
+        probs = torch.sigmoid(logits).tolist()[0]
+
+        # Aggregate probabilities for each emotion
+        for label, prob in zip(LABEL_COLUMNS, probs):
+            emotion_scores[label] += prob
+
+    # Normalize by the number of sentences
+    num_sentences = max(len(sentences), 1)
+    for label in emotion_scores:
+        emotion_scores[label] = round((emotion_scores[label] / num_sentences) * 100, 2)
+
+    # Sort emotions by highest probability
+    sorted_emotions = sorted(emotion_scores.items(), key=lambda x: x[1], reverse=True)
+
+    # Identify dominant emotion
+    dominant_emotion = sorted_emotions[0][0]
+
+    # Format the response
+    formatted_output = f"Emotion Breakdown:\n"
+    for label, score in sorted_emotions:
+        formatted_output += f"{label.capitalize()}: {score}%\n"
+
+    return formatted_output.strip()
+
 
 
 @app.route('/api/textanalyze', methods=['POST'])
@@ -121,7 +167,7 @@ def process_text():
         elif action == "paraphrase":
             result = paraphrase_text(text)  # Now fully integrated
         elif action == "sentiment":
-            result = "Pending sentiment analysis implementation"
+            result = analyze_sentiment(text)
         elif action == "translate":
             source_lang = data.get('source_lang')
             target_lang = data.get('target_lang')
