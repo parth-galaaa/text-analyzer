@@ -8,13 +8,11 @@ import ContentPasteIcon from '@mui/icons-material/ContentPaste';
 import FileUploadOutlinedIcon from '@mui/icons-material/FileUploadOutlined';
 import { Button } from "@/components/ui/button";
 import FileDownloadOutlinedIcon from '@mui/icons-material/FileDownloadOutlined';
-import {
-	Select,
-	SelectContent,
-	SelectItem,
-	SelectTrigger,
-	SelectValue,
-} from "@/components/ui/select"
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue, } from "@/components/ui/select"
+import DeleteAlertDialog from "@/components/alertbox";
+import CircularProgress from '@mui/material/CircularProgress';
+import Box from '@mui/material/Box';
+
 
 const TabsComponent = () => {
 	const [inputs, setInputs] = useState({
@@ -51,30 +49,35 @@ const TabsComponent = () => {
 	];
 
 	const maxWords = 250;
-
 	const countWords = (text: string) => text.trim().split(/\s+/).filter(Boolean).length;
-
+	const [loadingTab, setLoadingTab] = useState<"summarize" | "paraphrase" | "sentiment" | "translate" | null>(null);
 	const handleAction = async (tab: keyof typeof inputs) => {
 		setEnabledTab(tab);
+		setLoadingTab(tab);
+
 		try {
 			const response = await fetch("http://127.0.0.1:5328/api/textanalyze", {
 				method: "POST",
 				headers: { "Content-Type": "application/json" },
 				body: JSON.stringify({
 					text: inputs[tab],
-					action: tab, // Send the tab name as the action type
-					source_lang: "en", // Only needed for translation
-					target_lang: targetLanguage
+					action: tab,
+					source_lang: "en",
+					target_lang: "fr"
 				}),
 			});
+
 			if (!response.ok) throw new Error("Failed to fetch the response");
 			const data = await response.json();
 			setOutputs((prev) => ({ ...prev, [tab]: data.output }));
 		} catch (error) {
 			console.error("Error:", error);
 			alert("An error occurred while processing the request");
+		} finally {
+			setLoadingTab(null);
 		}
 	};
+
 
 	return (
 		<div className="flex flex-col p-10 dark:bg-gray-900 dark:text-gray-200">
@@ -194,14 +197,25 @@ const TabsComponent = () => {
 								animate={{ opacity: 1, y: 0 }}
 								transition={{ duration: 0.3 }}
 								className="relative w-full bg-gray-50 rounded-lg shadow-lg border border-gray-300 dark:bg-gray-800 dark:border-gray-700">
-								<Textarea
-									value={outputs[tab]}
-									placeholder="Output:"
-									className="w-full p-4 bg-white border-none focus:ring-0 dark:placeholder-black dark:text-black"
-									disabled={enabledTab !== tab}
-									style={{ fontSize: "18px", height: "60vh", overflow: "auto" }}
-								/>
+								<div className="relative">
+									{/* Show loading spinner when processing */}
+									{loadingTab === tab && (
+										<div className="absolute inset-0 flex items-center justify-center bg-white bg-opacity-70">
+											<CircularProgress />
+										</div>
+									)}
+
+									{/* Textarea remains unchanged but is disabled while loading */}
+									<Textarea
+										value={outputs[tab]}
+										placeholder="Output:"
+										className="w-full p-4 bg-white border-none focus:ring-0 dark:placeholder-black dark:text-black"
+										disabled={enabledTab !== tab || loadingTab === tab}
+										style={{ fontSize: "18px", height: "60vh", overflow: "auto" }}
+									/>
+								</div>
 								<div className="relative w-full p-3 bg-white rounded-lg flex justify-between items-center dark:bg-gray-800">
+									{/* Copy Button */}
 									<Button
 										variant="ghost"
 										size="icon"
@@ -210,31 +224,43 @@ const TabsComponent = () => {
 									>
 										<ContentCopyIcon className="w-4 h-4" />
 									</Button>
-									<Button
-										variant="ghost"
-										className="flex items-center px-3 py-2 hover:bg-gray-200 dark:hover:bg-gray-700"
-										onClick={() => {
-											const text = inputs[tab];
-											if (!text) {
-												alert("No text to download!");
-												return;
-											}
 
-											const blob = new Blob([text], { type: "text/plain" });
-											const url = URL.createObjectURL(blob);
+									{/* Right-aligned container for Delete & Download buttons */}
+									<div className="flex gap-x-2 ml-auto">
+										{/* Delete Button */}
+										<DeleteAlertDialog
+											onDelete={() => {
+												setInputs((prev) => ({ ...prev, [tab]: "" }));
+												setOutputs((prev) => ({ ...prev, [tab]: "" }));
+											}}
+										/>
 
-											const a = document.createElement("a");
-											a.href = url;
-											a.download = `${tab}.txt`;
-											document.body.appendChild(a);
-											a.click();
-											document.body.removeChild(a);
-											URL.revokeObjectURL(url);
-										}}
-									>
-										<span className="text-md">Export</span>
-										<FileDownloadOutlinedIcon />
-									</Button>
+										{/* Download Button */}
+										<Button
+											variant="ghost"
+											size="icon"
+											onClick={() => {
+												const text = outputs[tab];
+												if (!text) {
+													alert("No text to download!");
+													return;
+												}
+
+												const blob = new Blob([text], { type: "text/plain" });
+												const url = URL.createObjectURL(blob);
+
+												const a = document.createElement("a");
+												a.href = url;
+												a.download = `${tab}.txt`;
+												document.body.appendChild(a);
+												a.click();
+												document.body.removeChild(a);
+												URL.revokeObjectURL(url);
+											}}
+										>
+											<FileDownloadOutlinedIcon />
+										</Button>
+									</div>
 								</div>
 							</motion.div>
 						</div>
