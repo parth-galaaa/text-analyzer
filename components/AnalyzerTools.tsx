@@ -11,8 +11,6 @@ import FileDownloadOutlinedIcon from '@mui/icons-material/FileDownloadOutlined';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue, } from "@/components/ui/select"
 import DeleteAlertDialog from "@/components/alertbox";
 import CircularProgress from '@mui/material/CircularProgress';
-import Box from '@mui/material/Box';
-
 
 const TabsComponent = () => {
 	const [inputs, setInputs] = useState({
@@ -40,7 +38,7 @@ const TabsComponent = () => {
 		{ code: "it", name: "Italian" },
 		{ code: "nl", name: "Dutch" },
 		{ code: "hi", name: "Hindi" },
-		{ code: "zh", name: "Chinese (Simplified)" },
+		{ code: "zh", name: "Chinese" },
 		{ code: "cs", name: "Czech" },
 		{ code: "fi", name: "Finnish" },
 		{ code: "hu", name: "Hungarian" },
@@ -52,6 +50,11 @@ const TabsComponent = () => {
 	const countWords = (text: string) => text.trim().split(/\s+/).filter(Boolean).length;
 	const [loadingTab, setLoadingTab] = useState<"summarize" | "paraphrase" | "sentiment" | "translate" | null>(null);
 	const handleAction = async (tab: keyof typeof inputs) => {
+		if (tab === "translate" && !targetLanguage) {
+			alert("Please select a target language before translating.");
+			return; // Prevent further execution if no language is selected
+		}
+
 		setEnabledTab(tab);
 		setLoadingTab(tab);
 
@@ -61,9 +64,9 @@ const TabsComponent = () => {
 				headers: { "Content-Type": "application/json" },
 				body: JSON.stringify({
 					text: inputs[tab],
-					action: tab,
-					source_lang: "en",
-					target_lang: "fr"
+					action: tab, // Send the tab name as the action type
+					source_lang: "en", // Only needed for translation
+					target_lang: targetLanguage
 				}),
 			});
 
@@ -77,7 +80,6 @@ const TabsComponent = () => {
 			setLoadingTab(null);
 		}
 	};
-
 
 	return (
 		<div className="flex flex-col p-10 dark:bg-gray-900 dark:text-gray-200">
@@ -121,7 +123,7 @@ const TabsComponent = () => {
 											{countWords(inputs[tab])}/{maxWords} Words
 										</p>
 
-										{/* Divider That Actually Looks Good */}
+										{/* Divider */}
 										<div className="mx-2 h-6 w-px bg-gray-600 opacity-50"></div>
 
 										{/* Buttons Stay Compact and Clean */}
@@ -170,8 +172,8 @@ const TabsComponent = () => {
 									<div className="flex items-center">
 										{enabledTab === "translate" && (
 											<Select onValueChange={setTargetLanguage}>
-												<SelectTrigger className="w-[200px] mr-2">
-													<SelectValue placeholder="Choose Language" />
+												<SelectTrigger className="w-[115px] mr-2">
+													<SelectValue placeholder="Language" />
 												</SelectTrigger>
 												<SelectContent>
 													{languages.map(({ code, name }) => (
@@ -226,7 +228,7 @@ const TabsComponent = () => {
 									</Button>
 
 									{/* Right-aligned container for Delete & Download buttons */}
-									<div className="flex gap-x-2 ml-auto">
+									<div className="flex items-center">
 										{/* Delete Button */}
 										<DeleteAlertDialog
 											onDelete={() => {
@@ -238,7 +240,7 @@ const TabsComponent = () => {
 										{/* Download Button */}
 										<Button
 											variant="ghost"
-											size="icon"
+											className="flex items-center px-3 py-2 hover:bg-gray-200 dark:hover:bg-gray-700"
 											onClick={() => {
 												const text = outputs[tab];
 												if (!text) {
@@ -248,7 +250,6 @@ const TabsComponent = () => {
 
 												const blob = new Blob([text], { type: "text/plain" });
 												const url = URL.createObjectURL(blob);
-
 												const a = document.createElement("a");
 												a.href = url;
 												a.download = `${tab}.txt`;
@@ -258,6 +259,7 @@ const TabsComponent = () => {
 												URL.revokeObjectURL(url);
 											}}
 										>
+											<span className="text-md">Export</span>
 											<FileDownloadOutlinedIcon />
 										</Button>
 									</div>

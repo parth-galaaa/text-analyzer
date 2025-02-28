@@ -23,7 +23,7 @@ export default function DeleteAlertDialog({ onDelete }: DeleteAlertDialog) {
         <AlertDialog>
             {/* Button that opens the dialog */}
             <AlertDialogTrigger asChild>
-                <Button variant="ghost" size="icon">
+                <Button variant="ghost" size="icon" className="hover:bg-gray-200 dark:hover:bg-gray-700">
                     <DeleteIcon className="w-5 h-5" />
                 </Button>
             </AlertDialogTrigger>
