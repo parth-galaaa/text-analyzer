@@ -8,6 +8,13 @@ import ContentPasteIcon from '@mui/icons-material/ContentPaste';
 import FileUploadOutlinedIcon from '@mui/icons-material/FileUploadOutlined';
 import { Button } from "@/components/ui/button";
 import FileDownloadOutlinedIcon from '@mui/icons-material/FileDownloadOutlined';
+import {
+	Select,
+	SelectContent,
+	SelectItem,
+	SelectTrigger,
+	SelectValue,
+} from "@/components/ui/select"
 
 const TabsComponent = () => {
 	const [inputs, setInputs] = useState({
@@ -23,7 +30,27 @@ const TabsComponent = () => {
 		translate: "",
 	});
 	const [enabledTab, setEnabledTab] = useState<"summarize" | "paraphrase" | "sentiment" | "translate" | null>(null);
-	const maxWords = 150;
+	const [targetLanguage, setTargetLanguage] = useState("");
+
+	const languages = [
+		{ code: "en", name: "English" },
+		{ code: "fr", name: "French" },
+		{ code: "de", name: "German" },
+		{ code: "es", name: "Spanish" },
+		{ code: "ru", name: "Russian" },
+		{ code: "ar", name: "Arabic" },
+		{ code: "it", name: "Italian" },
+		{ code: "nl", name: "Dutch" },
+		{ code: "hi", name: "Hindi" },
+		{ code: "zh", name: "Chinese (Simplified)" },
+		{ code: "cs", name: "Czech" },
+		{ code: "fi", name: "Finnish" },
+		{ code: "hu", name: "Hungarian" },
+		{ code: "sv", name: "Swedish" },
+		{ code: "el", name: "Greek" }
+	];
+
+	const maxWords = 250;
 
 	const countWords = (text: string) => text.trim().split(/\s+/).filter(Boolean).length;
 
@@ -37,7 +64,7 @@ const TabsComponent = () => {
 					text: inputs[tab],
 					action: tab, // Send the tab name as the action type
 					source_lang: "en", // Only needed for translation
-					target_lang: "fr"
+					target_lang: targetLanguage
 				}),
 			});
 			if (!response.ok) throw new Error("Failed to fetch the response");
@@ -58,7 +85,7 @@ const TabsComponent = () => {
 							key={tab}
 							value={tab}
 							className="text-xl font-semibold p-4 hover:shadow-md hover:bg-gray-200 hover:text-gray-600 rounded-lg transition duration-300 dark:hover:bg-gray-700 dark:hover:text-gray-200"
-							onClick={() => setEnabledTab(null)}
+							onClick={() => setEnabledTab(tab as "summarize" | "paraphrase" | "sentiment" | "translate")}
 						>
 							{tab.charAt(0).toUpperCase() + tab.slice(1)}
 						</TabsTrigger>
@@ -137,13 +164,27 @@ const TabsComponent = () => {
 									</div>
 
 									{/* Right-aligned action button */}
-									<Button
-										className={`bg-[#10538A] text-white py-2 px-4 rounded-lg shadow-md transition duration-300 dark:bg-[#10538A] ${countWords(inputs[tab]) > maxWords ? "opacity-50 cursor-not-allowed" : "hover:bg-sky-700"}`}
-										onClick={() => handleAction(tab)}
-										disabled={countWords(inputs[tab]) > maxWords}
-									>
-										{tab.charAt(0).toUpperCase() + tab.slice(1)}
-									</Button>
+									<div className="flex items-center">
+										{enabledTab === "translate" && (
+											<Select onValueChange={setTargetLanguage}>
+												<SelectTrigger className="w-[200px] mr-2">
+													<SelectValue placeholder="Choose Language" />
+												</SelectTrigger>
+												<SelectContent>
+													{languages.map(({ code, name }) => (
+														<SelectItem key={code} value={code}>{name}</SelectItem>
+													))}
+												</SelectContent>
+											</Select>
+										)}
+										<Button
+											className={`bg-[#10538A] text-white py-2 px-4 rounded-lg shadow-md transition duration-300 dark:bg-[#10538A] ${countWords(inputs[tab]) > maxWords ? "opacity-50 cursor-not-allowed" : "hover:bg-sky-700"}`}
+											onClick={() => handleAction(tab)}
+											disabled={countWords(inputs[tab]) > maxWords}
+										>
+											{tab.charAt(0).toUpperCase() + tab.slice(1)}
+										</Button>
+									</div>
 								</div>
 
 							</motion.div>
