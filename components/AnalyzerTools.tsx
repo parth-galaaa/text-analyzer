@@ -113,7 +113,7 @@ const TabsComponent = () => {
 										</Button>
 										<Button
 											variant="ghost"
-											className="flex items-center space-x-2 px-3 py-2 hover:bg-gray-200 dark:hover:bg-gray-700"
+											className="flex items-center px-3 py-2 hover:bg-gray-200 dark:hover:bg-gray-700"
 											onClick={() => {
 												const input = document.createElement("input");
 												input.type = "file";
@@ -137,13 +137,13 @@ const TabsComponent = () => {
 									</div>
 
 									{/* Right-aligned action button */}
-									<button
-										className={`bg-[#10538A] text-white py-2 px-4 rounded-lg shadow-md transition duration-300 dark:bg-blue-600 ${countWords(inputs[tab]) > maxWords ? "opacity-50 cursor-not-allowed" : "hover:bg-blue-600"}`}
+									<Button
+										className={`bg-[#10538A] text-white py-2 px-4 rounded-lg shadow-md transition duration-300 dark:bg-[#10538A] ${countWords(inputs[tab]) > maxWords ? "opacity-50 cursor-not-allowed" : "hover:bg-sky-700"}`}
 										onClick={() => handleAction(tab)}
 										disabled={countWords(inputs[tab]) > maxWords}
 									>
 										{tab.charAt(0).toUpperCase() + tab.slice(1)}
-									</button>
+									</Button>
 								</div>
 
 							</motion.div>
@@ -171,7 +171,7 @@ const TabsComponent = () => {
 									</Button>
 									<Button
 										variant="ghost"
-										size="icon"
+										className="flex items-center px-3 py-2 hover:bg-gray-200 dark:hover:bg-gray-700"
 										onClick={() => {
 											const text = inputs[tab];
 											if (!text) {
