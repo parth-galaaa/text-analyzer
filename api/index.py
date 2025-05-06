@@ -12,8 +12,8 @@ nltk.download('punkt')
 
 # Load Paraphrasing Model
 device = "cpu"
-paraphrase_tokenizer = AutoTokenizer.from_pretrained("C:/Users/ruchi/Downloads/t5-base-chatgpt-150000")
-paraphrase_model = AutoModelForSeq2SeqLM.from_pretrained("C:/Users/ruchi/Downloads/t5-base-chatgpt-150000").to(device)
+paraphrase_tokenizer = AutoTokenizer.from_pretrained("/Users/parth/Downloads/UWindsor/Winter 2025/COMP 4990B/Project/t5-base-chatgpt-150000")
+paraphrase_model = AutoModelForSeq2SeqLM.from_pretrained("/Users/parth/Downloads/UWindsor/Winter 2025/COMP 4990B/Project/t5-base-chatgpt-150000").to(device)
 
 def paraphrase_sentence(sentence):
     num_beams = 5
@@ -106,9 +106,8 @@ def summarize_text(text):
     except Exception as e:
         return str(e)
     
-
 # Load Sentiment Analysis Model
-model_path = "C:/Users/ruchi/Downloads/emotion-roberta"  # Adjust path if necessary
+model_path = "/Users/parth/Downloads/UWindsor/Winter 2025/COMP 4990B/Project/emotion-roberta"  # Adjust path if necessary
 sentiment_tokenizer = RobertaTokenizer.from_pretrained(model_path)
 sentiment_model = RobertaForSequenceClassification.from_pretrained(model_path)
 
@@ -149,8 +148,6 @@ def analyze_sentiment(text):
         formatted_output += f"{label.capitalize()}: {score}%\n"
 
     return formatted_output.strip()
-
-
 
 @app.route('/api/textanalyze', methods=['POST'])
 def process_text():
